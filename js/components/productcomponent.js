@@ -14,7 +14,7 @@ class ProductComponent extends HTMLElement {
     this.shadowRoot.innerHTML = /*html*/ `
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
       <div class="container mt-4">
-        <h2>Formulario de Compra de Productos</h2>
+        <h2>Añadir Productos Al Carrito</h2>
         <form id="productForm">
           <div class="mb-3">
             <label for="productName" class="form-label">Seleccione un Producto</label>
