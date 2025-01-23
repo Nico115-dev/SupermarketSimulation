@@ -3,9 +3,7 @@ class SummaryComponent extends HTMLElement {
       super();
       const shadow = this.attachShadow({ mode: 'open' });
       shadow.innerHTML = /*html*/ `
-      <style>
-        @import url('components/ciudad/style.css');
-      </style>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
       <div class="container">
 
       </div>
@@ -16,4 +14,4 @@ class SummaryComponent extends HTMLElement {
     }
   }
   
-  customElements.define('detail-component', SummaryComponent);
+  customElements.define('summary-component', SummaryComponent);
