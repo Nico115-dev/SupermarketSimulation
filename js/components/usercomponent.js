@@ -38,20 +38,17 @@ class UserComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    // Añadir un evento al formulario para capturar los datos al enviarlo
     this.shadowRoot.querySelector("#userForm").addEventListener("submit", this.handleSubmit.bind(this));
   }
 
-  // Método para generar un número de factura único
   generateInvoiceNumber() {
     return `FAC-${Math.floor(Math.random() * 1000000)}`;
   }
 
-  // Función para manejar el envío del formulario
   handleSubmit(event) {
     event.preventDefault();
 
-    // Obtener los valores del formulario
+
     const userId = this.shadowRoot.querySelector("#userId").value;
     const userName = this.shadowRoot.querySelector("#userName").value;
     const userSurname = this.shadowRoot.querySelector("#userSurname").value;
@@ -59,7 +56,6 @@ class UserComponent extends HTMLElement {
     const userEmail = this.shadowRoot.querySelector("#userEmail").value;
     const invoiceNumber = this.shadowRoot.querySelector("#invoiceNumber").value;
 
-    // Crear un objeto con los datos del usuario
     const userInfo = {
       userId,
       userName,
@@ -69,13 +65,10 @@ class UserComponent extends HTMLElement {
       invoiceNumber
     };
 
-    // Convertir el objeto a una cadena para mostrarlo en la alerta
     let userInfoString = "";
     for (let key in userInfo) {
       userInfoString += `${key}: ${userInfo[key]}\n`;
     }
-
-    // Mostrar los datos en una alerta
     alert(`Información del Usuario:\n\n${userInfoString}`);
   }
 }

@@ -3,24 +3,26 @@ class SummaryComponent extends HTMLElement {
     super();
     const shadow = this.attachShadow({ mode: 'open' });
     this.productsInCart = []; // Lista para almacenar los productos añadidos
+    this.invoiceNumber = this.generateInvoiceNumber(); // Generar un número de factura único
     this.render();
   }
 
   connectedCallback() {
-    // Escucha eventos globales para agregar productos
     window.addEventListener("addToCart", this.addProductToCart.bind(this));
   }
 
   disconnectedCallback() {
-    // Limpia el evento global al desconectar el componente
     window.removeEventListener("addToCart", this.addProductToCart.bind(this));
   }
 
-  // Método para agregar productos al carrito
+  generateInvoiceNumber() {
+    return `FAC-${Math.floor(Math.random() * 1000000)}`;
+  }
+
   addProductToCart(event) {
     const { productId, productName, productValue, productQuantity } = event.detail;
 
-    // Convertir valores a números y validar
+    // Validaciones
     const productValueNum = parseFloat(productValue);
     const productQuantityNum = parseInt(productQuantity, 10);
 
@@ -35,7 +37,6 @@ class SummaryComponent extends HTMLElement {
       existingProduct.productQuantity += productQuantityNum;
       existingProduct.subtotal = existingProduct.productQuantity * existingProduct.productValue;
     } else {
-      // Agregar un nuevo producto al carrito
       this.productsInCart.push({
         productId,
         productName,
@@ -46,21 +47,22 @@ class SummaryComponent extends HTMLElement {
     }
 
     console.log("Carrito actualizado:", this.productsInCart);
-    this.render(); // Actualiza la interfaz
+    this.render();
   }
 
-  // Método para eliminar un producto del carrito
   removeProduct(productId) {
     this.productsInCart = this.productsInCart.filter((product) => product.productId !== productId);
     console.log("Producto eliminado. Carrito:", this.productsInCart);
-    this.render(); // Actualiza la interfaz
+    this.render();
   }
 
-  // Renderizar el HTML dinámico
   render() {
     let tableContent = '';
+    let subtotal = 0;
     if (this.productsInCart.length > 0) {
-      // Generar el contenido de la tabla si hay productos en el carrito
+      // Calcular subtotal
+      subtotal = this.productsInCart.reduce((acc, product) => acc + product.subtotal, 0);
+
       tableContent = `
         <table class="table">
           <thead>
@@ -94,23 +96,39 @@ class SummaryComponent extends HTMLElement {
         </table>
       `;
     } else {
-      // Mostrar mensaje cuando el carrito está vacío
       tableContent = `<p>No hay productos en el carrito.</p>`;
     }
 
-    // Asignar el HTML al Shadow DOM
+    const iva = subtotal * 0.19;
+    const total = subtotal + iva;
+
     this.shadowRoot.innerHTML = /*html*/ `
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
       <div class="container mt-4">
         <h2>Resumen del Carrito</h2>
         ${tableContent}
-        <div class="mt-3">
+        <div class="mt-3 text-center">
+          <table class="table w-50 mx-auto">
+            <tbody>
+              <tr>
+                <td><strong>Subtotal:</strong></td>
+                <td>$${subtotal.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td><strong>IVA (19%):</strong></td>
+                <td>$${iva.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td><strong>Total:</strong></td>
+                <td>$${total.toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
           <button class="btn btn-success" id="payButton">Pagar</button>
         </div>
       </div>
     `;
 
-    // Agregar eventos a los botones de eliminar, si existen
     const removeButtons = this.shadowRoot.querySelectorAll(".remove-btn");
     if (removeButtons) {
       removeButtons.forEach((button) => {
@@ -120,29 +138,37 @@ class SummaryComponent extends HTMLElement {
         });
       });
     }
-
-    // Evento para el botón de pagar
     const payButton = this.shadowRoot.querySelector("#payButton");
     if (payButton) {
       payButton.addEventListener("click", this.handlePay.bind(this));
     }
   }
 
-  // Método para manejar el evento de pago
   handlePay() {
     if (this.productsInCart.length === 0) {
       alert("No hay productos en el carrito para pagar.");
       return;
     }
 
-    // Sumar el total del carrito
-    const total = this.productsInCart.reduce((acc, product) => acc + product.subtotal, 0);
+    const subtotal = this.productsInCart.reduce((acc, product) => acc + product.subtotal, 0);
+    const iva = subtotal * 0.19;
+    const total = subtotal + iva;
 
-    alert(`El total de su compra es: $${total.toFixed(2)}\n¡Gracias por su compra!`);
+    const productsDetails = this.productsInCart
+      .map(
+        (product) => `Producto: ${product.productName}, Cantidad: ${product.productQuantity}, Subtotal: $${product.subtotal.toFixed(2)}`
+      )
+      .join('\n');
+
+    const message = `Factura: ${this.invoiceNumber}\n\n` +
+      `Productos Comprados:\n${productsDetails}\n\n` +
+      `Subtotal: $${subtotal.toFixed(2)}\n` +
+      `IVA (19%): $${iva.toFixed(2)}\n` +
+      `Total: $${total.toFixed(2)}\n\n¡Gracias por su compra!`;
+
+    alert(message);
     this.productsInCart = []; // Vaciar el carrito después de pagar
-    this.render(); // Volver a renderizar el carrito vacío
+    this.render();
   }
 }
-
-// Registrar el componente personalizado
 customElements.define('summary-component', SummaryComponent);

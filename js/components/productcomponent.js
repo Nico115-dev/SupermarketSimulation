@@ -44,7 +44,6 @@ class ProductComponent extends HTMLElement {
       </div>
     `;
 
-    // Agregar eventos
     this.shadowRoot
       .querySelector("#productName")
       .addEventListener("change", this.handleProductChange.bind(this));
@@ -80,7 +79,6 @@ class ProductComponent extends HTMLElement {
   
     const total = productValue * productQuantity;
   
-    // Emitir evento para el carrito
     window.dispatchEvent(
       new CustomEvent("addToCart", {
         detail: { productId, productName, productValue, productQuantity },
@@ -89,9 +87,8 @@ class ProductComponent extends HTMLElement {
   
     alert(`Producto agregado:\n\n${productName}\nCantidad: ${productQuantity}\nTotal: $${total.toFixed(2)}`);
   
-    // Limpiar el formulario
+
     this.shadowRoot.querySelector("#productForm").reset();
-    // También puedes limpiar el select si es necesario
     this.shadowRoot.querySelector("#productName").selectedIndex = 0;
   }
   
