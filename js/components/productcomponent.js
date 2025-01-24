@@ -65,30 +65,36 @@ class ProductComponent extends HTMLElement {
 
   handleSubmit(event) {
     event.preventDefault();
-
+  
     const productId = this.shadowRoot.querySelector("#productId").value;
     const productName = this.shadowRoot.querySelector("#productName").options[
       this.shadowRoot.querySelector("#productName").selectedIndex
     ].text;
     const productValue = parseFloat(this.shadowRoot.querySelector("#productValue").value);
     const productQuantity = parseInt(this.shadowRoot.querySelector("#productQuantity").value, 10);
-
+  
     if (!productId || !productName || isNaN(productValue) || isNaN(productQuantity)) {
       alert("Por favor, seleccione un producto y asegúrese de que la cantidad sea válida.");
       return;
     }
-
+  
     const total = productValue * productQuantity;
-
+  
     // Emitir evento para el carrito
     window.dispatchEvent(
       new CustomEvent("addToCart", {
         detail: { productId, productName, productValue, productQuantity },
       })
     );
-
+  
     alert(`Producto agregado:\n\n${productName}\nCantidad: ${productQuantity}\nTotal: $${total.toFixed(2)}`);
+  
+    // Limpiar el formulario
+    this.shadowRoot.querySelector("#productForm").reset();
+    // También puedes limpiar el select si es necesario
+    this.shadowRoot.querySelector("#productName").selectedIndex = 0;
   }
+  
 }
 
 customElements.define('product-component', ProductComponent);

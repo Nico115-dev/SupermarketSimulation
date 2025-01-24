@@ -80,9 +80,9 @@ class SummaryComponent extends HTMLElement {
                 <tr>
                   <td>${product.productId}</td>
                   <td>${product.productName}</td>
-                  <td>${product.productValue.toFixed(2)}</td>
+                  <td>${product.productValue}</td>
                   <td>${product.productQuantity}</td>
-                  <td>${product.subtotal.toFixed(2)}</td>
+                  <td>${product.subtotal}</td>
                   <td>
                     <button class="btn btn-danger btn-sm remove-btn" data-id="${product.productId}">X</button>
                   </td>
@@ -104,6 +104,9 @@ class SummaryComponent extends HTMLElement {
       <div class="container mt-4">
         <h2>Resumen del Carrito</h2>
         ${tableContent}
+        <div class="mt-3">
+          <button class="btn btn-success" id="payButton">Pagar</button>
+        </div>
       </div>
     `;
 
@@ -117,6 +120,27 @@ class SummaryComponent extends HTMLElement {
         });
       });
     }
+
+    // Evento para el botón de pagar
+    const payButton = this.shadowRoot.querySelector("#payButton");
+    if (payButton) {
+      payButton.addEventListener("click", this.handlePay.bind(this));
+    }
+  }
+
+  // Método para manejar el evento de pago
+  handlePay() {
+    if (this.productsInCart.length === 0) {
+      alert("No hay productos en el carrito para pagar.");
+      return;
+    }
+
+    // Sumar el total del carrito
+    const total = this.productsInCart.reduce((acc, product) => acc + product.subtotal, 0);
+
+    alert(`El total de su compra es: $${total.toFixed(2)}\n¡Gracias por su compra!`);
+    this.productsInCart = []; // Vaciar el carrito después de pagar
+    this.render(); // Volver a renderizar el carrito vacío
   }
 }
 
