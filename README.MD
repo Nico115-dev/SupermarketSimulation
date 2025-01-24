@@ -8,7 +8,7 @@ Esta es una aplicación web de supermercado responsiva desarrollada en JavaScrip
 ## Características
 - **Formulario de Usuario:** Los usuarios pueden ingresar sus datos personales (ID, nombre, dirección, correo electrónico, etc.).
 - **Gestor de Carrito:**
-  - Agregar hasta 50 productos al carrito.
+  - Agregar hasta 50 de los productos disponibles al carrito.
   - Eliminar productos del carrito.
   - Visualizar el subtotal, IVA (19%) y total.
 - **Factura:**
