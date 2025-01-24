@@ -3,37 +3,37 @@ class UserComponent extends HTMLElement {
     super();
     const shadow = this.attachShadow({ mode: 'open' });
     shadow.innerHTML = /*html*/ `
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <div class="container mt-4">
-      <h2>Formulario de Información del Usuario</h2>
-      <form id="userForm">
-        <div class="mb-3">
-          <label for="userId" class="form-label">ID</label>
-          <input type="text" class="form-control" id="userId" placeholder="Ingrese su ID" required>
-        </div>
-        <div class="mb-3">
-          <label for="userName" class="form-label">Nombre</label>
-          <input type="text" class="form-control" id="userName" placeholder="Ingrese su nombre" required>
-        </div>
-        <div class="mb-3">
-          <label for="userSurname" class="form-label">Apellidos</label>
-          <input type="text" class="form-control" id="userSurname" placeholder="Ingrese sus apellidos" required>
-        </div>
-        <div class="mb-3">
-          <label for="userAddress" class="form-label">Dirección</label>
-          <input type="text" class="form-control" id="userAddress" placeholder="Ingrese su dirección" required>
-        </div>
-        <div class="mb-3">
-          <label for="userEmail" class="form-label">Correo Electrónico</label>
-          <input type="email" class="form-control" id="userEmail" placeholder="Ingrese su correo electrónico" required>
-        </div>
-        <div class="mb-3">
-          <label for="invoiceNumber" class="form-label">Número de Factura</label>
-          <input type="text" class="form-control" id="invoiceNumber" value="${this.generateInvoiceNumber()}" readonly>
-        </div>
-        <button type="submit" class="btn btn-primary">Enviar</button>
-      </form>
-    </div>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+      <div class="container mt-4">
+        <h2>Formulario de Información del Usuario</h2>
+        <form id="userForm">
+          <div class="mb-3">
+            <label for="userId" class="form-label">ID</label>
+            <input type="text" class="form-control" id="userId" placeholder="Ingrese su ID" required>
+          </div>
+          <div class="mb-3">
+            <label for="userName" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="userName" placeholder="Ingrese su nombre" required>
+          </div>
+          <div class="mb-3">
+            <label for="userSurname" class="form-label">Apellidos</label>
+            <input type="text" class="form-control" id="userSurname" placeholder="Ingrese sus apellidos" required>
+          </div>
+          <div class="mb-3">
+            <label for="userAddress" class="form-label">Dirección</label>
+            <input type="text" class="form-control" id="userAddress" placeholder="Ingrese su dirección" required>
+          </div>
+          <div class="mb-3">
+            <label for="userEmail" class="form-label">Correo Electrónico</label>
+            <input type="email" class="form-control" id="userEmail" placeholder="Ingrese su correo electrónico" required>
+          </div>
+          <div class="mb-3">
+            <label for="invoiceNumber" class="form-label">Número de Factura</label>
+            <input type="text" class="form-control" id="invoiceNumber" value="${this.generateInvoiceNumber()}" readonly>
+          </div>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+      </div>
     `;
   }
 

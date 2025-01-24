@@ -1,9 +1,9 @@
 class ProductComponent extends HTMLElement {
   constructor() {
     super();
-    const shadow = this.attachShadow({ mode: 'open' });
+    this.attachShadow({ mode: 'open' });
 
-
+    // Cargar productos desde el archivo data.js
     import('../../data/data.js').then((module) => {
       this.productos = module.productos;
       this.render();
@@ -20,7 +20,11 @@ class ProductComponent extends HTMLElement {
             <label for="productName" class="form-label">Seleccione un Producto</label>
             <select class="form-select" id="productName" required>
               <option value="" selected disabled>Elija un producto</option>
-              ${this.productos.map((producto) => `<option value="${producto.id}">${producto.name}</option>`).join('')}
+              ${this.productos
+                .map(
+                  (producto) => `<option value="${producto.id}">${producto.name}</option>`
+                )
+                .join('')}
             </select>
           </div>
           <div class="mb-3">
@@ -40,40 +44,50 @@ class ProductComponent extends HTMLElement {
       </div>
     `;
 
-    // Agrega los eventos necesarios
-    this.shadowRoot.querySelector("#productName").addEventListener("change", this.handleProductChange.bind(this));
-    this.shadowRoot.querySelector("#productForm").addEventListener("submit", this.handleSubmit.bind(this));
+    // Agregar eventos
+    this.shadowRoot
+      .querySelector("#productName")
+      .addEventListener("change", this.handleProductChange.bind(this));
+    this.shadowRoot
+      .querySelector("#productForm")
+      .addEventListener("submit", this.handleSubmit.bind(this));
   }
 
-  // Maneja el cambio del producto seleccionado
   handleProductChange(event) {
     const selectedId = parseInt(event.target.value, 10);
     const producto = this.productos.find((prod) => prod.id === selectedId);
 
     if (producto) {
       this.shadowRoot.querySelector("#productId").value = producto.id;
-      this.shadowRoot.querySelector("#productValue").value = producto.value;
+      this.shadowRoot.querySelector("#productValue").value = producto.value.toFixed(2);
     }
   }
 
-  // Maneja el envío del formulario
   handleSubmit(event) {
     event.preventDefault();
 
     const productId = this.shadowRoot.querySelector("#productId").value;
-    const productName = this.shadowRoot.querySelector("#productName").options[this.shadowRoot.querySelector("#productName").selectedIndex].text;
-    const productValue = this.shadowRoot.querySelector("#productValue").value;
-    const productQuantity = this.shadowRoot.querySelector("#productQuantity").value;
+    const productName = this.shadowRoot.querySelector("#productName").options[
+      this.shadowRoot.querySelector("#productName").selectedIndex
+    ].text;
+    const productValue = parseFloat(this.shadowRoot.querySelector("#productValue").value);
+    const productQuantity = parseInt(this.shadowRoot.querySelector("#productQuantity").value, 10);
+
+    if (!productId || !productName || isNaN(productValue) || isNaN(productQuantity)) {
+      alert("Por favor, seleccione un producto y asegúrese de que la cantidad sea válida.");
+      return;
+    }
 
     const total = productValue * productQuantity;
 
-    alert(`
-      Producto: ${productName}
-      ID: ${productId}
-      Valor Unitario: ${productValue}
-      Cantidad: ${productQuantity}
-      Total: ${total}
-    `);
+    // Emitir evento para el carrito
+    window.dispatchEvent(
+      new CustomEvent("addToCart", {
+        detail: { productId, productName, productValue, productQuantity },
+      })
+    );
+
+    alert(`Producto agregado:\n\n${productName}\nCantidad: ${productQuantity}\nTotal: $${total.toFixed(2)}`);
   }
 }
 
